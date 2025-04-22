@@ -60,4 +60,43 @@ This file documents the prompts used to create and modify this project.
 12. "Can you create a file called "PROMPT_HISTORY.md" that contains each propt used so far in this project. Can you place that in the git root directory for the project and then generate commands to add it to github."
     - Created this prompt history file
     - Documented project evolution
-    - Prepared for GitHub commit 
+    - Prepared for GitHub commit
+
+## Network and Node Configuration Updates
+
+13. "can you modify the Docker Compose Jinja template to include a second internal network named "inband" that all nodes will connect to."
+    - Added inband network to all nodes
+    - Updated network configuration in template
+    - Maintained existing compute network
+
+14. "can you make the node name format use %04d for the compute nodes"
+    - Updated compute node naming to use 4-digit format
+    - Changed from c001 to node0001 format
+    - Updated volume names to match new format
+
+15. "can you make the prefix "login" used for the login node type a parameter that can be changed in the python that generates the docker compose file"
+    - Added configurable login node prefix
+    - Updated Python code with new parameter
+    - Added command-line option for prefix
+
+16. "can you adjust the docker compose jinja so that all the machines created will be addressable on the inband network as MACHINE_NAME.inband where MACHINE_NAME is , for exmaple, "login001" or "node0001"."
+    - Added hostname aliases for inband network
+    - Implemented MACHINE_NAME.inband format
+    - Updated network configuration for all nodes
+
+17. "can you add one more network called "ib" that is similar to "inband" i.e. all the machines are attached to that network and machines have addresses that resolve to MACHINE_NAME.ib on that network."
+    - Added ib network configuration
+    - Implemented MACHINE_NAME.ib hostname format
+    - Updated all nodes to connect to new network
+
+18. "can you update the github repository"
+    - Committed all changes to git
+    - Created and pushed v0.1.0 tag
+    - Updated repository documentation
+
+19. "can you update the jinja to generate a set of "ldap" machines called ldapNNN where NNN is a sequence number starting at 001. By default the python should generate a docker compose file with just one ldap machine. There should be a command line parameter that can be passed to the python code that can set a different number of ldap machines. There should always be at least one ldap machine."
+    - Added LDAP node generation
+    - Implemented configurable number of LDAP nodes
+    - Added validation for minimum one LDAP node
+    - Updated Python code with new parameter
+    - Added command-line option for LDAP nodes 

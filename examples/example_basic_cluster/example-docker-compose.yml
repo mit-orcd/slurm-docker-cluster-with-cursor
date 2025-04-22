@@ -1,96 +1,98 @@
 services:
-  login:
+
+  login001:
     build: .
-    hostname: login
+    hostname: login001
     mem_limit: 24G
     mem_reservation: 24G
     networks:
-      - compute
+      compute:
+      inband:
+        aliases:
+          - login001.inband
+      ib:
+        aliases:
+          - login001.ib
     ports:
       - "6322:22"
     volumes:
       - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
 
 
-  c001:
+
+  node0001:
     build: .
-    hostname: c001
+    hostname: node0001
     networks:
-      - compute
+      compute:
+      inband:
+        aliases:
+          - node0001.inband
+      ib:
+        aliases:
+          - node0001.ib
     expose:
       - 22
     volumes:
       - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
 
-  c002:
+  node0002:
     build: .
-    hostname: c002
+    hostname: node0002
     networks:
-      - compute
+      compute:
+      inband:
+        aliases:
+          - node0002.inband
+      ib:
+        aliases:
+          - node0002.ib
     expose:
       - 22
     volumes:
       - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
 
-  c003:
+  node0003:
     build: .
-    hostname: c003
+    hostname: node0003
     networks:
-      - compute
+      compute:
+      inband:
+        aliases:
+          - node0003.inband
+      ib:
+        aliases:
+          - node0003.ib
     expose:
       - 22
     volumes:
       - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
 
-  c004:
+  node0004:
     build: .
-    hostname: c004
+    hostname: node0004
     networks:
-      - compute
+      compute:
+      inband:
+        aliases:
+          - node0004.inband
+      ib:
+        aliases:
+          - node0004.ib
     expose:
       - 22
     volumes:
       - home:/home
-
-  c005:
-    build: .
-    hostname: c005
-    networks:
-      - compute
-    expose:
-      - 22
-    volumes:
-      - home:/home
-
-  c006:
-    build: .
-    hostname: c006
-    networks:
-      - compute
-    expose:
-      - 22
-    volumes:
-      - home:/home
-
-  c007:
-    build: .
-    hostname: c007
-    networks:
-      - compute
-    expose:
-      - 22
-    volumes:
-      - home:/home
-
-  c008:
-    build: .
-    hostname: c008
-    networks:
-      - compute
-    expose:
-      - 22
-    volumes:
-      - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
 
 
 volumes:
@@ -98,24 +100,18 @@ volumes:
   etc_slurm:
   home:
 
-  c001_slurmd_state:
+  node0001_slurmd_state:
 
-  c002_slurmd_state:
+  node0002_slurmd_state:
 
-  c003_slurmd_state:
+  node0003_slurmd_state:
 
-  c004_slurmd_state:
-
-  c005_slurmd_state:
-
-  c006_slurmd_state:
-
-  c007_slurmd_state:
-
-  c008_slurmd_state:
+  node0004_slurmd_state:
 
   slurmctld_state:
   slurmdbd_state:
 
 networks:
-  compute: 
+  compute:
+  inband:
+  ib: 

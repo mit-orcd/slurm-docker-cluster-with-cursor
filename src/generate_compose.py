@@ -5,20 +5,26 @@ from jinja2 import Environment, FileSystemLoader
 def generate_docker_compose(
     num_compute_nodes: int = 4,
     num_login_nodes: int = 1,
+    num_ldap_nodes: int = 1,
     login_mem_limit: int = 24,
     login_prefix: str = "login",
     output_file: str = "docker-compose.yml"
 ) -> None:
     """
-    Generate a Docker Compose file with a specified number of compute nodes and login nodes.
+    Generate a Docker Compose file with a specified number of compute nodes, login nodes, and LDAP nodes.
     
     Args:
         num_compute_nodes (int): Number of compute nodes to generate (default: 4)
         num_login_nodes (int): Number of login nodes to generate (default: 1)
+        num_ldap_nodes (int): Number of LDAP nodes to generate (default: 1)
         login_mem_limit (int): Memory limit in GB for each login node (default: 24)
         login_prefix (str): Prefix to use for login node names (default: "login")
         output_file (str): Path to the output file (default: docker-compose.yml)
     """
+    # Validate that we have at least one LDAP node
+    if num_ldap_nodes < 1:
+        raise ValueError("Number of LDAP nodes must be at least 1")
+    
     # Set up Jinja2 environment
     template_dir = Path(__file__).parent
     env = Environment(loader=FileSystemLoader(str(template_dir)))
@@ -28,6 +34,7 @@ def generate_docker_compose(
     rendered = template.render(
         num_compute_nodes=num_compute_nodes,
         num_login_nodes=num_login_nodes,
+        num_ldap_nodes=num_ldap_nodes,
         login_mem_limit=login_mem_limit,
         login_prefix=login_prefix
     )
@@ -36,10 +43,10 @@ def generate_docker_compose(
     with open(output_file, "w") as f:
         f.write(rendered)
     
-    print(f"Generated Docker Compose file with {num_compute_nodes} compute nodes, {num_login_nodes} login nodes, and {login_mem_limit}GB login memory at {output_file}")
+    print(f"Generated Docker Compose file with {num_compute_nodes} compute nodes, {num_login_nodes} login nodes, {num_ldap_nodes} LDAP nodes, and {login_mem_limit}GB login memory at {output_file}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate a Docker Compose file with configurable number of compute nodes and login nodes")
+    parser = argparse.ArgumentParser(description="Generate a Docker Compose file with configurable number of compute nodes, login nodes, and LDAP nodes")
     parser.add_argument(
         "-n", "--num-nodes",
         type=int,
@@ -51,6 +58,12 @@ def main():
         type=int,
         default=1,
         help="Number of login nodes to generate (default: 1)"
+    )
+    parser.add_argument(
+        "--num-ldap",
+        type=int,
+        default=1,
+        help="Number of LDAP nodes to generate (default: 1)"
     )
     parser.add_argument(
         "-m", "--login-mem",
@@ -70,7 +83,7 @@ def main():
     )
     
     args = parser.parse_args()
-    generate_docker_compose(args.num_nodes, args.num_login, args.login_mem, args.login_prefix, args.output)
+    generate_docker_compose(args.num_nodes, args.num_login, args.num_ldap, args.login_mem, args.login_prefix, args.output)
 
 if __name__ == "__main__":
     main() 

@@ -1,4 +1,24 @@
 services:
+{% for i in range(1, num_ldap_nodes + 1) %}
+  ldap{{ "%03d"|format(i) }}:
+    build: .
+    hostname: ldap{{ "%03d"|format(i) }}
+    networks:
+      compute:
+      inband:
+        aliases:
+          - ldap{{ "%03d"|format(i) }}.inband
+      ib:
+        aliases:
+          - ldap{{ "%03d"|format(i) }}.ib
+    expose:
+      - 22
+    volumes:
+      - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
+
+{% endfor %}
 {% for i in range(1, num_login_nodes + 1) %}
   {{ login_prefix }}{{ "%03d"|format(i) }}:
     build: .
