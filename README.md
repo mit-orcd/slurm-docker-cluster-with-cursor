@@ -105,6 +105,52 @@ This creates a cluster with:
 - 1 Slurm controller node
 - 1 Slurm database node
 
+### Managing Docker Containers
+
+#### Starting the Cluster
+To start all containers defined in the generated docker-compose.yml:
+```bash
+docker compose up -d
+```
+
+This will:
+- Build any required images
+- Create all defined networks and volumes
+- Start all containers in detached mode
+
+#### Checking Container Status
+To see the status of all containers:
+```bash
+docker compose ps
+```
+
+#### Viewing Logs
+To view logs from all containers:
+```bash
+docker compose logs
+```
+
+To view logs from a specific container:
+```bash
+docker compose logs <container_name>
+```
+
+#### Stopping the Cluster
+To stop all containers while preserving their state:
+```bash
+docker compose stop
+```
+
+To stop and remove all containers, networks, and volumes:
+```bash
+docker compose down
+```
+
+To stop and remove all containers, networks, volumes, and images:
+```bash
+docker compose down --rmi all
+```
+
 ### Command-line Options
 
 - `-n, --num-nodes`: Number of compute nodes (minimum: 2, default: 4)
