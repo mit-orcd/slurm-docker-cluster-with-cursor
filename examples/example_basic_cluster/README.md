@@ -42,11 +42,15 @@ The script generates a Docker Compose file with:
 ### Using the Generated Configuration
 
 1. Review the generated Docker Compose file
-2. Start the cluster:
+2. Build the Docker image:
+   ```bash
+   docker build -t slurm-cluster .
+   ```
+3. Start the cluster:
    ```bash
    docker-compose -f example-docker-compose.yml up -d
    ```
-3. Stop the cluster:
+4. Stop the cluster:
    ```bash
    docker-compose -f example-docker-compose.yml down
    ```
@@ -55,4 +59,5 @@ The script generates a Docker Compose file with:
 
 - The generated file is meant to be a starting point and may need customization for your specific needs
 - Make sure Docker and Docker Compose are installed and running
-- The script requires Python 3.8 or later 
+- The script requires Python 3.8 or later
+- The Dockerfile provides the base configuration for all nodes in the cluster 
