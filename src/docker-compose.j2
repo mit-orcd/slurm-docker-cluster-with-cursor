@@ -1,26 +1,44 @@
 services:
-  login:
+{% for i in range(1, num_login_nodes + 1) %}
+  {{ login_prefix }}{{ "%03d"|format(i) }}:
     build: .
-    hostname: login
+    hostname: {{ login_prefix }}{{ "%03d"|format(i) }}
     mem_limit: {{ login_mem_limit }}G
     mem_reservation: {{ login_mem_limit }}G
     networks:
-      - compute
+      compute:
+      inband:
+        aliases:
+          - {{ login_prefix }}{{ "%03d"|format(i) }}.inband
+      ib:
+        aliases:
+          - {{ login_prefix }}{{ "%03d"|format(i) }}.ib
     ports:
-      - "6322:22"
+      - "{{ 6321 + i }}:22"
     volumes:
       - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
 
+{% endfor %}
 {% for i in range(1, num_compute_nodes + 1) %}
-  c{{ "%03d"|format(i) }}:
+  node{{ "%04d"|format(i) }}:
     build: .
-    hostname: c{{ "%03d"|format(i) }}
+    hostname: node{{ "%04d"|format(i) }}
     networks:
-      - compute
+      compute:
+      inband:
+        aliases:
+          - node{{ "%04d"|format(i) }}.inband
+      ib:
+        aliases:
+          - node{{ "%04d"|format(i) }}.ib
     expose:
       - 22
     volumes:
       - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
 {% endfor %}
 
 volumes:
@@ -28,10 +46,12 @@ volumes:
   etc_slurm:
   home:
 {% for i in range(1, num_compute_nodes + 1) %}
-  c{{ "%03d"|format(i) }}_slurmd_state:
+  node{{ "%04d"|format(i) }}_slurmd_state:
 {% endfor %}
   slurmctld_state:
   slurmdbd_state:
 
 networks:
-  compute: 
+  compute:
+  inband:
+  ib: 

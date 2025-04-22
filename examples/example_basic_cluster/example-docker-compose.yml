@@ -1,0 +1,121 @@
+services:
+  login:
+    build: .
+    hostname: login
+    mem_limit: 24G
+    mem_reservation: 24G
+    networks:
+      - compute
+    ports:
+      - "6322:22"
+    volumes:
+      - home:/home
+
+
+  c001:
+    build: .
+    hostname: c001
+    networks:
+      - compute
+    expose:
+      - 22
+    volumes:
+      - home:/home
+
+  c002:
+    build: .
+    hostname: c002
+    networks:
+      - compute
+    expose:
+      - 22
+    volumes:
+      - home:/home
+
+  c003:
+    build: .
+    hostname: c003
+    networks:
+      - compute
+    expose:
+      - 22
+    volumes:
+      - home:/home
+
+  c004:
+    build: .
+    hostname: c004
+    networks:
+      - compute
+    expose:
+      - 22
+    volumes:
+      - home:/home
+
+  c005:
+    build: .
+    hostname: c005
+    networks:
+      - compute
+    expose:
+      - 22
+    volumes:
+      - home:/home
+
+  c006:
+    build: .
+    hostname: c006
+    networks:
+      - compute
+    expose:
+      - 22
+    volumes:
+      - home:/home
+
+  c007:
+    build: .
+    hostname: c007
+    networks:
+      - compute
+    expose:
+      - 22
+    volumes:
+      - home:/home
+
+  c008:
+    build: .
+    hostname: c008
+    networks:
+      - compute
+    expose:
+      - 22
+    volumes:
+      - home:/home
+
+
+volumes:
+  etc_munge:
+  etc_slurm:
+  home:
+
+  c001_slurmd_state:
+
+  c002_slurmd_state:
+
+  c003_slurmd_state:
+
+  c004_slurmd_state:
+
+  c005_slurmd_state:
+
+  c006_slurmd_state:
+
+  c007_slurmd_state:
+
+  c008_slurmd_state:
+
+  slurmctld_state:
+  slurmdbd_state:
+
+networks:
+  compute: 
