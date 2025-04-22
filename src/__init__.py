@@ -1,0 +1,3 @@
+"""
+Docker Compose Generator package.
+""" 

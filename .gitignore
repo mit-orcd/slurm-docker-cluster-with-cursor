@@ -38,4 +38,8 @@ htmlcov/
 
 # Docker
 docker-compose.yml
-*.log 
+*.log
+
+# Package
+*.egg-info/
+*.egg 
