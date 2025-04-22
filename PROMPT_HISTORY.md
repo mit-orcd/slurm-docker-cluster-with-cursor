@@ -1,0 +1,63 @@
+# Prompt History
+
+This file documents the prompts used to create and modify this project.
+
+## Initial Project Setup
+
+1. "Hi - Can you start a new project for me"
+   - Created initial project structure
+   - Set up basic files and directories
+
+2. "add the new project alongside this one please. The new project is about writing some python to generate docker-compose files."
+   - Created Docker Compose generator project
+   - Set up initial Python files and templates
+
+3. "Can you write some python that has a Jinja template for generating a file like the docker compose example below. In the python can you template the "c00" sections so that a loop can iterate to generate a specified number of them, where the number is an input parmeter to the python with a defaul value of four."
+   - Created Jinja2 template for Docker Compose generation
+   - Implemented configurable compute node generation
+   - Added Python script for template rendering
+
+4. "what is the right way to set up a github repository for this project. I have a github organization I would like to use and can create a repo by hand. Is it OK for me to then update the directory from the terminal or is it better to allow cursor to do that?"
+   - Set up GitHub repository structure
+   - Added .gitignore and LICENSE files
+   - Initialized git repository
+
+5. "I have created the repo and added an origin as git@github.com:mit-orcd/slurm-docker-cluster-with-cursor.git . Using the ssh URL lets me access using a key that I can add to the MacOS keyring."
+   - Connected local repository to GitHub
+   - Set up SSH-based authentication
+
+6. "hmmm - when I try "pytest tests/" I get the following [error message]"
+   - Fixed Python package structure
+   - Added __init__.py files
+   - Created setup.py
+   - Updated import paths
+
+7. "can you make the 24GB memory limit for the login node an input parameter too and have it default to 24GB if it is not set."
+   - Added configurable login node memory
+   - Updated template and Python code
+   - Added tests for new functionality
+
+8. "can you create an examples directory with a python driver that generates an example docker-compse file that remains after the program is run. The example should have defaults but also support use of the commoan line options that are availqble."
+   - Created examples directory
+   - Added example driver script
+   - Added example documentation
+
+9. "Actually can you create a sub-directory called example_basic_cluster in the examples directory and move the current example content into that sub-directory. When you do this can you update any code as needed to ensure paths still work."
+   - Reorganized examples into subdirectories
+   - Updated file paths and documentation
+   - Maintained functionality
+
+10. "can you add the file /Users/cnh/projects/hpc-toolset/simple-cluster/Dockerfile to the example_basic_cluster sub-directory"
+    - Added Dockerfile to example
+    - Updated documentation
+    - Integrated Dockerfile with example
+
+11. "can you update the README.md in example_basic_cluster. The "docker build -t slurm-cluster ." step is not needed. The generated yaml file will look for the file Dockerfie in directory . and that will set up the needed image."
+    - Updated documentation
+    - Removed unnecessary build step
+    - Clarified Dockerfile usage
+
+12. "Can you create a file called "PROMPT_HISTORY.md" that contains each propt used so far in this project. Can you place that in the git root directory for the project and then generate commands to add it to github."
+    - Created this prompt history file
+    - Documented project evolution
+    - Prepared for GitHub commit 
