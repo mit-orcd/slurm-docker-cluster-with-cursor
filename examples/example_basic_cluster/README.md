@@ -1,12 +1,13 @@
-# Docker Compose Generator Examples
+# Basic Slurm Cluster Example
 
-This directory contains example scripts demonstrating how to use the Docker Compose Generator.
+This example demonstrates how to generate a basic Slurm cluster configuration with configurable compute nodes and login memory.
 
-## Example Script: generate_example.py
+## Files
 
-This script demonstrates how to generate a Docker Compose file for a Slurm cluster with configurable compute nodes and login memory.
+- `generate_example.py`: Script to generate the Docker Compose configuration
+- `Dockerfile`: Base image configuration for the Slurm nodes
 
-### Usage
+## Usage
 
 ```bash
 # Generate with default settings (4 nodes, 24GB login memory)
@@ -42,15 +43,12 @@ The script generates a Docker Compose file with:
 ### Using the Generated Configuration
 
 1. Review the generated Docker Compose file
-2. Build the Docker image:
-   ```bash
-   docker build -t slurm-cluster .
-   ```
-3. Start the cluster:
+2. Start the cluster:
    ```bash
    docker-compose -f example-docker-compose.yml up -d
    ```
-4. Stop the cluster:
+   This will automatically build the required Docker image using the Dockerfile in the current directory.
+3. Stop the cluster:
    ```bash
    docker-compose -f example-docker-compose.yml down
    ```
@@ -60,4 +58,5 @@ The script generates a Docker Compose file with:
 - The generated file is meant to be a starting point and may need customization for your specific needs
 - Make sure Docker and Docker Compose are installed and running
 - The script requires Python 3.8 or later
-- The Dockerfile provides the base configuration for all nodes in the cluster 
+- The Dockerfile in this directory provides the base configuration for all nodes in the cluster
+- Docker Compose will automatically build the required image using the local Dockerfile 
