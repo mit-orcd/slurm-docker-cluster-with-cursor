@@ -1,4 +1,6 @@
+# Define the services section of the Docker Compose file
 services:
+# LDAP nodes - Authentication and directory services
 {% for i in range(1, num_ldap_nodes + 1) %}
   ldap{{ "%03d"|format(i) }}:
     build: .
@@ -19,6 +21,8 @@ services:
       - etc_munge:/etc/munge
 
 {% endfor %}
+
+# Login nodes - User access points with memory limits
 {% for i in range(1, num_login_nodes + 1) %}
   {{ login_prefix }}{{ "%03d"|format(i) }}:
     build: .
@@ -41,6 +45,8 @@ services:
       - etc_munge:/etc/munge
 
 {% endfor %}
+
+# Compute nodes - Worker nodes for job execution
 {% for i in range(1, num_compute_nodes + 1) %}
   node{{ "%04d"|format(i) }}:
     build: .
@@ -61,17 +67,80 @@ services:
       - etc_munge:/etc/munge
 {% endfor %}
 
-volumes:
-  etc_munge:
-  etc_slurm:
-  home:
-{% for i in range(1, num_compute_nodes + 1) %}
-  node{{ "%04d"|format(i) }}_slurmd_state:
+# Service nodes - Additional utility nodes
+{% for i in range(1, num_service_nodes + 1) %}
+  service{{ "%04d"|format(i) }}:
+    build: .
+    hostname: service{{ "%04d"|format(i) }}
+    networks:
+      compute:
+      inband:
+        aliases:
+          - service{{ "%04d"|format(i) }}.inband
+      ib:
+        aliases:
+          - service{{ "%04d"|format(i) }}.ib
+    expose:
+      - 22
+    volumes:
+      - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
 {% endfor %}
-  slurmctld_state:
-  slurmdbd_state:
 
+# Slurm controller daemon - Manages the compute cluster
+  slurmctld:
+    build: .
+    hostname: slurmctld
+    networks:
+      compute:
+      inband:
+        aliases:
+          - slurmctld.inband
+      ib:
+        aliases:
+          - slurmctld.ib
+    expose:
+      - 22
+    volumes:
+      - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
+      - slurmctld_state:/var/spool/slurmctld
+
+# Slurm database daemon - Stores job and cluster information
+  slurmdbd:
+    build: .
+    hostname: slurmdbd
+    networks:
+      compute:
+      inband:
+        aliases:
+          - slurmdbd.inband
+      ib:
+        aliases:
+          - slurmdbd.ib
+    expose:
+      - 22
+    volumes:
+      - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
+      - slurmdbd_state:/var/spool/slurmdbd
+
+# Define persistent volumes for state and configuration
+volumes:
+  etc_munge:  # Munge authentication configuration
+  etc_slurm:  # Slurm configuration files
+  home:       # Shared home directory
+{% for i in range(1, num_compute_nodes + 1) %}
+  node{{ "%04d"|format(i) }}_slurmd_state:  # State storage for each compute node
+{% endfor %}
+  slurmctld_state:  # State storage for the Slurm controller
+  slurmdbd_state:   # State storage for the Slurm database
+
+# Define the networks used by the cluster
 networks:
-  compute:
-  inband:
-  ib: 
+  compute:  # Primary compute network
+  inband:   # Internal management network
+  ib:       # Additional internal network 
