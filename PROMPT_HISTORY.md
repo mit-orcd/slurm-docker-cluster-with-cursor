@@ -153,4 +153,14 @@ This file documents the prompts used to create and modify this project.
   - Matches Dockerfile functionality
   - Includes all required packages and configurations
   - Added proper sections for post-install, startup, and environment
-  - Added metadata and help information 
+  - Added metadata and help information
+
+## 2024-03-21: Apptainer Cluster Script
+- Added apptainer-cluster.sh:
+  - Equivalent functionality to docker-compose.yml
+  - Creates network namespaces for compute, inband, and ib networks
+  - Manages container instances with proper networking
+  - Handles volume mounting and permissions
+  - Includes cleanup functionality
+  - Supports all node types (LDAP, login, compute, service, slurmctld, slurmdbd)
+  - Configurable number of nodes and memory limits 
