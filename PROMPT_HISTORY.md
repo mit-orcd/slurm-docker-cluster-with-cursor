@@ -145,4 +145,12 @@ This file documents the prompts used to create and modify this project.
   - Complete removal of all resources
   - Includes containers, networks, volumes, and images
   - Handles orphaned resources
-  - Uses example-docker-compose.yml as reference 
+  - Uses example-docker-compose.yml as reference
+
+## 2024-03-21: Apptainer Support
+- Added Apptainer definition file:
+  - Created Apptainer.def for container compatibility
+  - Matches Dockerfile functionality
+  - Includes all required packages and configurations
+  - Added proper sections for post-install, startup, and environment
+  - Added metadata and help information 

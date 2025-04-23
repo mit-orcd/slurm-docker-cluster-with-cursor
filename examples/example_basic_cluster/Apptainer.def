@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: buildpack-deps:noble
+
+%post
+    # Install OpenSSH and set up directories
+    apt-get update && \
+    apt-get install -y --no-install-recommends openssh-server && \
+    mkdir -p /run/sshd
+
+    # Install build tools
+    apt-get update && \
+    apt-get install -y --no-install-recommends build-essential
+
+    # Install network tools
+    apt-get update && \
+    apt-get install -y --no-install-recommends iputils-ping
+
+    # Install text utilities
+    apt-get update && \
+    apt-get install -y --no-install-recommends less vim
+
+    # Set root password
+    echo 'root:root' | chpasswd
+
+    # Allow root SSH login (for testing only)
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+    # Clean up
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+%startscript
+    # Start SSH in foreground mode
+    /usr/sbin/sshd -D
+
+%environment
+    # Set any environment variables if needed
+    export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+%labels
+    Author "MIT ORCD"
+    Version "1.0"
+    Description "Apptainer container for Slurm cluster nodes"
+
+%help
+    This container provides a base image for Slurm cluster nodes with SSH access.
+    It includes:
+    - OpenSSH server
+    - Build tools
+    - Network utilities
+    - Text editors
+    - Root SSH access (for testing) 
