@@ -151,6 +151,11 @@ To stop and remove all containers, networks, volumes, and images:
 docker compose down --rmi all
 ```
 
+To completely clean up everything (containers, networks, volumes, images, and orphaned resources):
+```bash
+docker compose -f example-docker-compose.yml down -v --rmi all --remove-orphans
+```
+
 ### Command-line Options
 
 - `-n, --num-nodes`: Number of compute nodes (minimum: 2, default: 4)

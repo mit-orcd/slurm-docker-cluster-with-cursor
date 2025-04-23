@@ -130,4 +130,19 @@ This file documents the prompts used to create and modify this project.
   - Removed read-only flag from root_ssh volume mounts
   - Enabled write access for root user to SSH configuration
   - Updated volume description in template
-  - Maintained security by keeping volume restricted to root user 
+  - Maintained security by keeping volume restricted to root user
+
+## 2024-03-21: Volume Initialization
+- Added volume initializer service:
+  - New volume_initializer machine to prepare volumes
+  - Copies SSH keys from volume_inputs/root_ssh to root_ssh volume
+  - Sets proper permissions (700 for .ssh directory, 600 for keys)
+  - Added depends_on to all services to ensure proper initialization
+  - Runs once and exits after initialization
+
+## 2024-03-21: Documentation Updates
+- Added comprehensive cleanup command to README:
+  - Complete removal of all resources
+  - Includes containers, networks, volumes, and images
+  - Handles orphaned resources
+  - Uses example-docker-compose.yml as reference 
