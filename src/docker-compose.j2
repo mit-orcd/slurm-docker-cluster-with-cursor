@@ -19,7 +19,7 @@ services:
       - home:/home
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
-      - root_ssh:/root/.ssh:ro
+      - root_ssh:/root/.ssh
 
 {% endfor %}
 
@@ -44,7 +44,7 @@ services:
       - home:/home
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
-      - root_ssh:/root/.ssh:ro
+      - root_ssh:/root/.ssh
 
 {% endfor %}
 
@@ -67,7 +67,7 @@ services:
       - home:/home
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
-      - root_ssh:/root/.ssh:ro
+      - root_ssh:/root/.ssh
 {% endfor %}
 
 # Service nodes - Additional utility nodes
@@ -89,7 +89,7 @@ services:
       - home:/home
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
-      - root_ssh:/root/.ssh:ro
+      - root_ssh:/root/.ssh
 {% endfor %}
 
 # Slurm controller daemon - Manages the compute cluster
@@ -111,7 +111,7 @@ services:
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
       - slurmctld_state:/var/spool/slurmctld
-      - root_ssh:/root/.ssh:ro
+      - root_ssh:/root/.ssh
 
 # Slurm database daemon - Stores job and cluster information
   slurmdbd:
@@ -132,14 +132,14 @@ services:
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
       - slurmdbd_state:/var/spool/slurmdbd
-      - root_ssh:/root/.ssh:ro
+      - root_ssh:/root/.ssh
 
 # Define persistent volumes for state and configuration
 volumes:
   etc_munge:  # Munge authentication configuration
   etc_slurm:  # Slurm configuration files
   home:       # Shared home directory
-  root_ssh:   # Secure SSH configuration for root user
+  root_ssh:   # SSH configuration for root user
 {% for i in range(1, num_compute_nodes + 1) %}
   node{{ "%04d"|format(i) }}_slurmd_state:  # State storage for each compute node
 {% endfor %}

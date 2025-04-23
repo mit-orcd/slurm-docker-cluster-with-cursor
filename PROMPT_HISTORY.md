@@ -123,4 +123,11 @@ This file documents the prompts used to create and modify this project.
   - New root_ssh volume for root user SSH keys
   - Mounted as read-only to all nodes
   - Restricted to root user access
-  - Added to all node types (LDAP, login, compute, service, slurmctld, slurmdbd) 
+  - Added to all node types (LDAP, login, compute, service, slurmctld, slurmdbd)
+
+## 2024-03-21: SSH Volume Write Access
+- Modified SSH volume configuration:
+  - Removed read-only flag from root_ssh volume mounts
+  - Enabled write access for root user to SSH configuration
+  - Updated volume description in template
+  - Maintained security by keeping volume restricted to root user 
