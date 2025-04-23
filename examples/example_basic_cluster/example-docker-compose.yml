@@ -1,4 +1,49 @@
+# Define the services section of the Docker Compose file
 services:
+# Volume initializer - Prepares volumes before other services start
+  volume_initializer:
+    build: .
+    hostname: volume_initializer
+    networks:
+      compute:
+      inband:
+        aliases:
+          - volume_initializer.inband
+      ib:
+        aliases:
+          - volume_initializer.ib
+    volumes:
+      - ./volume_inputs/root_ssh:/root/ssh_input:ro
+      - root_ssh:/root/.ssh
+    command: >
+      sh -c "cp -r /root/ssh_input/* /root/.ssh/ && chmod 700 /root/.ssh && chmod 600 /root/.ssh/*"
+
+# LDAP nodes - Authentication and directory services
+
+  ldap001:
+    build: .
+    hostname: ldap001
+    networks:
+      compute:
+      inband:
+        aliases:
+          - ldap001.inband
+      ib:
+        aliases:
+          - ldap001.ib
+    expose:
+      - 22
+    volumes:
+      - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
+      - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
+
+
+
+# Login nodes - User access points with memory limits
 
   login001:
     build: .
@@ -19,8 +64,13 @@ services:
       - home:/home
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
+      - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 
 
+
+# Compute nodes - Worker nodes for job execution
 
   node0001:
     build: .
@@ -39,6 +89,9 @@ services:
       - home:/home
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
+      - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 
   node0002:
     build: .
@@ -57,6 +110,9 @@ services:
       - home:/home
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
+      - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 
   node0003:
     build: .
@@ -75,6 +131,9 @@ services:
       - home:/home
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
+      - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 
   node0004:
     build: .
@@ -93,25 +152,101 @@ services:
       - home:/home
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
+      - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 
 
+# Service nodes - Additional utility nodes
+
+  service0001:
+    build: .
+    hostname: service0001
+    networks:
+      compute:
+      inband:
+        aliases:
+          - service0001.inband
+      ib:
+        aliases:
+          - service0001.ib
+    expose:
+      - 22
+    volumes:
+      - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
+      - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
+
+
+# Slurm controller daemon - Manages the compute cluster
+  slurmctld:
+    build: .
+    hostname: slurmctld
+    networks:
+      compute:
+      inband:
+        aliases:
+          - slurmctld.inband
+      ib:
+        aliases:
+          - slurmctld.ib
+    expose:
+      - 22
+    volumes:
+      - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
+      - slurmctld_state:/var/spool/slurmctld
+      - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
+
+# Slurm database daemon - Stores job and cluster information
+  slurmdbd:
+    build: .
+    hostname: slurmdbd
+    networks:
+      compute:
+      inband:
+        aliases:
+          - slurmdbd.inband
+      ib:
+        aliases:
+          - slurmdbd.ib
+    expose:
+      - 22
+    volumes:
+      - home:/home
+      - etc_slurm:/etc/slurm
+      - etc_munge:/etc/munge
+      - slurmdbd_state:/var/spool/slurmdbd
+      - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
+
+# Define persistent volumes for state and configuration
 volumes:
-  etc_munge:
-  etc_slurm:
-  home:
+  etc_munge:  # Munge authentication configuration
+  etc_slurm:  # Slurm configuration files
+  home:       # Shared home directory
+  root_ssh:   # SSH configuration for root user
 
-  node0001_slurmd_state:
+  node0001_slurmd_state:  # State storage for each compute node
 
-  node0002_slurmd_state:
+  node0002_slurmd_state:  # State storage for each compute node
 
-  node0003_slurmd_state:
+  node0003_slurmd_state:  # State storage for each compute node
 
-  node0004_slurmd_state:
+  node0004_slurmd_state:  # State storage for each compute node
 
-  slurmctld_state:
-  slurmdbd_state:
+  slurmctld_state:  # State storage for the Slurm controller
+  slurmdbd_state:   # State storage for the Slurm database
 
+# Define the networks used by the cluster
 networks:
-  compute:
-  inband:
-  ib: 
+  compute:  # Primary compute network
+  inband:   # Internal management network
+  ib:       # Additional internal network 

@@ -1,5 +1,23 @@
 # Define the services section of the Docker Compose file
 services:
+# Volume initializer - Prepares volumes before other services start
+  volume_initializer:
+    build: .
+    hostname: volume_initializer
+    networks:
+      compute:
+      inband:
+        aliases:
+          - volume_initializer.inband
+      ib:
+        aliases:
+          - volume_initializer.ib
+    volumes:
+      - ./volume_inputs/root_ssh:/root/ssh_input:ro
+      - root_ssh:/root/.ssh
+    command: >
+      sh -c "cp -r /root/ssh_input/* /root/.ssh/ && chmod 700 /root/.ssh && chmod 600 /root/.ssh/*"
+
 # LDAP nodes - Authentication and directory services
 {% for i in range(1, num_ldap_nodes + 1) %}
   ldap{{ "%03d"|format(i) }}:
@@ -20,6 +38,8 @@ services:
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
       - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 
 {% endfor %}
 
@@ -45,6 +65,8 @@ services:
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
       - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 
 {% endfor %}
 
@@ -68,6 +90,8 @@ services:
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
       - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 {% endfor %}
 
 # Service nodes - Additional utility nodes
@@ -90,6 +114,8 @@ services:
       - etc_slurm:/etc/slurm
       - etc_munge:/etc/munge
       - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 {% endfor %}
 
 # Slurm controller daemon - Manages the compute cluster
@@ -112,6 +138,8 @@ services:
       - etc_munge:/etc/munge
       - slurmctld_state:/var/spool/slurmctld
       - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 
 # Slurm database daemon - Stores job and cluster information
   slurmdbd:
@@ -133,6 +161,8 @@ services:
       - etc_munge:/etc/munge
       - slurmdbd_state:/var/spool/slurmdbd
       - root_ssh:/root/.ssh
+    depends_on:
+      - volume_initializer
 
 # Define persistent volumes for state and configuration
 volumes:
