@@ -116,4 +116,11 @@ This file documents the prompts used to create and modify this project.
   - Network configuration explanations
   - Volume management details
 - Improved command-line interface documentation
-- Added container management commands to README 
+- Added container management commands to README
+
+## 2024-03-21: Secure SSH Configuration
+- Added secure SSH volume configuration:
+  - New root_ssh volume for root user SSH keys
+  - Mounted as read-only to all nodes
+  - Restricted to root user access
+  - Added to all node types (LDAP, login, compute, service, slurmctld, slurmdbd) 
